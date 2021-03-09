@@ -12,128 +12,172 @@ import java.util.Scanner;
  *
  * @author Andrew
  */
-public class Usuario {
-    private String nombreU;
-    private String apellido1U;
-    private String apellido2U;
-    private int nifU;
-    private String passU;
-    private ArrayList<Libro> librosReserva;
+public class Usuario extends Persona {
+    //private String nombreU;
+    //private String apellido1U;
+    //private String apellido2U;
+    //private int nifU;
+    //private String passU;
+    //private ArrayList<Libro> librosReserva;
+    private int telef;
+    private String direcc;
+    private int post;
+    private String correoE;
+    private ArrayList<Reserva> listaReserva;
     private static Scanner lectorUsuario = new Scanner(System.in);
 
     public Usuario() {
-        this.librosReserva = new ArrayList();
-    }
-
-    public Usuario(String nombreU, String apellido1U, String apellido2U, int nifU, String passU) {
-        this.setNombreU(nombreU);
-        this.setApellido1U(apellido1U);
-        this.setApellido2U(apellido2U);
-        this.setNifU(nifU);
-        this.setPassU(passU);
-        this.librosReserva = new ArrayList();
-    }
-
-    public Usuario(Usuario uCopia) {
-        this.setNombreU(uCopia.getNombreU());
-        this.setApellido1U(uCopia.getApellido1U());
-        this.setApellido2U(uCopia.getApellido2U());
-        this.setNifU(uCopia.getNifU());
-        this.setPassU(uCopia.getPassU());
-        this.setLibrosReserva(uCopia.getLibrosReserva());
     }
     
-    public String getNombreU() {
-        return nombreU;
+    public Usuario(int telef, String direcc, int post, String correoE, 
+             String nombre, String apellido1, String apellido2, int edad) {
+        super(nombre, apellido1, apellido2, edad);
+        this.setTelef(telef);
+        this.setDirecc(direcc);
+        this.setPost(post);
+        this.setCorreoE(correoE);
+        this.listaReserva = new ArrayList();
+    }
+    
+    //HACER CONSTRUCTOR COPIA
+    public Usuario(Usuario uCopia) {
+        super(uCopia.getNombre(), uCopia.getApellido1(), uCopia.getApellido2(), uCopia.getEdad());
+        this.setTelef(uCopia.getTelef());
+        this.setDirecc(uCopia.getDirecc());
+        this.setPost(uCopia.getPost());
+        this.setCorreoE(uCopia.getCorreoE());
+        this.listaReserva = new ArrayList();
+        this.setListaReserva(uCopia.getListaReserva());
     }
 
-    public String getApellido1U() {
-        return apellido1U;
+    public void setTelef(int telef) {
+        this.telef = telef;
     }
 
-    public String getApellido2U() {
-        return apellido2U;
+    public void setDirecc(String direcc) {
+        this.direcc = direcc;
     }
 
-    public int getNifU() {
-        return nifU;
+    public void setPost(int post) {
+        this.post = post;
     }
 
-    public String getPassU() {
-        return passU;
+    public void setCorreoE(String correoE) {
+        this.correoE = correoE;
     }
 
-    public ArrayList<Libro> getLibrosReserva() {
-        return librosReserva;
+    public void setListaReserva(ArrayList<Reserva> listaReserva) {
+        this.listaReserva = listaReserva;
+    }
+    
+    public int getTelef() {
+        return telef;
     }
 
-    public void setNombreU(String nombreU) {
-        this.nombreU = nombreU;
+    public String getDirecc() {
+        return direcc;
     }
 
-    public void setApellido1U(String apellido1U) {
-        this.apellido1U = apellido1U;
+    public int getPost() {
+        return post;
     }
 
-    public void setApellido2U(String apellido2U) {
-        this.apellido2U = apellido2U;
+    public String getCorreoE() {
+        return correoE;
     }
 
-    public void setNifU(int nifU) {
-        this.nifU = nifU;
+    public ArrayList<Reserva> getListaReserva() {
+        return listaReserva;
     }
-
-    public void setPassU(String passU) {
-        while (passU.length() < 8) {
-            System.out.println("La contraseña debe tener por lo menos 8 caracteres:");
-            passU = lectorUsuario.nextLine();
-        }
-        this.passU = passU;
-    }
-
-    public void setLibrosReserva(ArrayList<Libro> librosReserva) {
-        if (librosReserva.size() >= 5) {
-            System.out.println("Un usuario no puede reservar más de 5 libros a la vez");
-        } else {
-            this.librosReserva = librosReserva;
-        }
-    }
-
+    
     @Override
     public String toString() {
-        return "Usuario{" + "nombreU=" + nombreU + ", apellido1U=" + apellido1U + ", apellido2U=" + apellido2U + ", nifU=" + nifU + ", passU=" + passU + ", librosReserva=" + librosReserva + '}';
+        return super.toString() + " Usuario{" + "telef=" + telef + ", direcc=" + direcc + ", post=" + post + ", correoE=" + correoE + ", listaReserva=" + listaReserva + '}';
     }
     
-    public static void anadirUsuario(ArrayList<Usuario> lista) {
-        Usuario usuario = new Usuario();
-        System.out.print("\nNombre: ");
-        usuario.setNombreU(lectorUsuario.nextLine());
-        System.out.print("\nPrimer Apellido: ");
-        usuario.setApellido1U(lectorUsuario.nextLine());
-        System.out.print("\nSegundo Apellido: ");
-        usuario.setApellido2U(lectorUsuario.nextLine());
-        System.out.print("\nNIF: ");
-        usuario.setNifU(lectorUsuario.nextInt());
+    @Override
+    public void solicitarDatosPersona() {
+        super.solicitarDatosPersona();
+        System.out.print("\nIntroduce telefono: ");
+        this.setTelef(lectorUsuario.nextInt());
         lectorUsuario.nextLine();
-        System.out.print("\nContraseña: ");
-        usuario.setPassU(lectorUsuario.nextLine());
-        lista.add(usuario);
+        System.out.print("\nIntroduce direccion: ");
+        this.setDirecc(lectorUsuario.nextLine());
+        System.out.print("\nIntroduce direccion postal: ");
+        this.setPost(lectorUsuario.nextInt());
+        lectorUsuario.nextLine();
+        System.out.print("\nIntroduce correo electronico: ");
+        this.setCorreoE(lectorUsuario.nextLine());
     }
     
-    public static int buscarUsuario(ArrayList<Usuario> lista) {
-        System.out.println("Indica el NIF: ");
-        int nif = lectorUsuario.nextInt();
+    public static int devolverPosUsuario(ArrayList<Persona> lista) {
+        System.out.println("Introduce NIF: ");
+        String correo = lectorUsuario.nextLine();
         for (int i=0; i<lista.size(); i++) {
-            if (lista.get(i).getNifU()== nif) {
-                return i;
+            if (lista.get(i) instanceof Usuario) {
+                if (((Usuario)lista.get(i)).getCorreoE() == correo) {
+                    return i;
+                }
             }
         }
-        return -1;
+        System.out.println("No existe usuario con correo "+correo);
+        return -1;   
     }
     
-    public void mostrarReservaLibros() {
-        for (int i=0; i<getLibrosReserva().size(); i++) {
-            System.out.println(getLibrosReserva().get(i));
+    public static int confirmarContrasenaUsuario(ArrayList<Persona> lista) {
+        System.out.println("\nIdentificación de usuario");
+        int posUs = devolverPosUsuario(lista);
+        System.out.println("\nIntroduce numero de telefono: ");
+        int telef = lectorUsuario.nextInt();
+        if (((Usuario)lista.get(posUs)).getTelef() == telef) {
+            return posUs;
+        } else {
+            System.out.println("Numero usuario incorrecto");
+            return -1;
+        }
+    }
+    
+    @Override
+    public void cambiarContrasena() {
+        System.out.println("Cambiar: ");
+        System.out.println("1.- Correo"+"\n2.- Telefono");
+        int ent = lectorUsuario.nextInt();
+        boolean iguales = false;
+        switch(ent) {
+            case 1:
+                String correo = "";
+                String correoC = "";
+                while (!iguales) { 
+                    System.out.print("Introduce nuevo correo electronico: ");
+                    correo = lectorUsuario.nextLine();
+                    System.out.print("Vuelve a introducir nuevo correo electronico: ");
+                    correoC = lectorUsuario.nextLine();
+                    if (correo.equals(correoC)) {
+                        iguales = true;
+                    } else {
+                        System.out.println("Los correos no coinciden. Vuelve a intentar");
+                    }
+                }
+                this.setCorreoE(correo);
+                System.out.println("Nuevo correo establecido");  
+                break;
+
+            case 2:
+                int telef = 0;
+                int telefC = 0;
+                while (!iguales) { 
+                    System.out.print("Introduce nuevo telefono: ");
+                    telef = lectorUsuario.nextInt();
+                    System.out.print("Vuelve a introducir nuevo correo electronico: ");
+                    telefC = lectorUsuario.nextInt();
+                    if (telef == telefC) {
+                        iguales = true;
+                    } else {
+                        System.out.println("Los telefonos no coinciden. Vuelve a intentar");
+                    }
+                }
+                this.setTelef(telef);
+                break;
         }
     }
 }

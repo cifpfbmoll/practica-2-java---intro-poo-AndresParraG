@@ -5,6 +5,7 @@
  */
 package biblioteca;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -17,8 +18,42 @@ public class main {
     private static boolean seguir = true;
     private static biblioteca bib = new biblioteca("Biblioteca B.Moll");
     private static Libro libro;
-    private static Persona persona;
+    private static Bibliotecario bibliotecario;
     private static Usuario usuario;
+    
+    public static void main(String[] args) {
+        libro = new Libro(1234, "El Libro", "Librero", "Libreria", 15, 5);
+        bibliotecario = new Bibliotecario("ADMIN", 1234, "ADMIN", "ADMIN", "ADMIN", "ADMIN", 99);
+        usuario = new Usuario(666999666, "DIRECCION", 07000, "CORREO", "NOMBRE", "APELLIDO1", "APELLIDO2", 21);
+        bib.getListaLibros().add(libro);
+        bib.getListaPersonas().add(bibliotecario);
+        bib.getListaPersonas().add(usuario);
+        while (seguir) {
+            System.out.println("1.- Opciones Libros");
+            System.out.println("2.- Opciones Bibliotecario");
+            System.out.println("3.- Opciones Biblioteca");
+            System.out.println("0.- Salir");
+            in = ent.nextInt();
+            switch (in) {
+                case 1:
+                    opcionesLibro();
+                    break;
+                case 2:
+                    opcionesBibliotecario();
+                    break;
+                case 3:
+                    opcionesBiblioteca();
+                    break;
+                case 0:
+                    seguir = false;
+                    System.out.println("Adios");
+                    break;
+                default:
+                    System.out.println("Opción no válida");
+                      
+            }
+        }
+    }
     
     public static void opcionesLibro() {
         while (seguir) {
@@ -51,34 +86,66 @@ public class main {
         seguir = true;
     }
     
-    public static void opcionesPersona() {
-        while (seguir) {
-            System.out.println("1.- Añadir Persona");
-            System.out.println("2.- Eliminar Persona");
-            System.out.println("0.- Volver");
-            in = ent.nextInt();
-            switch (in) {
-                case 1:
-                    Persona.anadirPersona(bib.getListaPersonas());
-                    break;
-                case 2:
-                    Persona.eliminarPersona(bib.getListaPersonas());
-                    break;
-                case 0:
-                    seguir = false;
-                    break;
-                default:
-                    System.out.println("Opción no válida");
+    public static void opcionesBibliotecario() {
+        ArrayList<Persona> listaPersonas = bib.getListaPersonas();
+        ArrayList<Libro> listaLibro = bib.getListaLibros();
+        int posBib = bibliotecario.confirmarContrasenaBibliotecario(bib.getListaPersonas());
+        
+        if (posBib != -1) {
+            while (seguir) {
+                Bibliotecario sesionBibliotecario = (Bibliotecario) listaPersonas.get(posBib);
+                System.out.println("1.- Añadir Bibliotecario");
+                System.out.println("2.- Añadir Usuario");
+                System.out.println("3.- Reservar Libro");
+                System.out.println("4.- Devolver Libro");
+                System.out.println("5-. Añadir Copia Libro");
+                System.out.println("6.- Cambiar contraseña bibliotecario");
+                System.out.println("7.- Cambiar contraseña usuario");
+                System.out.println("0.- Volver");
+                in = ent.nextInt();
+                switch (in) {
+                    case 1:
+                        Bibliotecario nuevoBibliotecario = new Bibliotecario();
+                        nuevoBibliotecario.solicitarDatosPersona();
+                        listaPersonas.add(nuevoBibliotecario);
+                        break;
+                    case 2:
+                        Usuario nuevoUsuario = new Usuario();
+                        nuevoUsuario.solicitarDatosPersona();
+                        listaPersonas.add(nuevoUsuario);
+                        break;
+                    case 3:
+                        Bibliotecario.reservarLibro(listaLibro, listaPersonas);
+                        break;
+                    case 4:
+                        Bibliotecario.devolverLibro(listaLibro, listaPersonas);
+                        break;
+                    case 5:
+                        //AÑADIR COPIA LIBRO
+                        break;
+                    case 6:
+                        sesionBibliotecario.cambiarContrasena();
+                        break;
+                    case 7:
+                        Usuario usuario = (Usuario)listaPersonas.get(Usuario.devolverPosUsuario(listaPersonas));
+                        usuario.cambiarContrasena();
+                    case 0:
+                        seguir = false;
+                        break;
+                    default:
+                        System.out.println("Opción no válida");
+                }
             }
+            seguir = true;
         }
-        seguir = true;
     }
     
     public static void opcionesBiblioteca() {
         while (seguir) {
             System.out.println("1.- Mostrar Libros");
             System.out.println("2.- Mostrar Personas");
-            System.out.println("3.- Mostrar Usuarios");
+            System.out.println("3.- Mostrar Bibliotecarios");
+            System.out.println("4.- Mostrar Usuarios");
             System.out.println("0.- Volver");
             in = ent.nextInt();
             switch (in) {
@@ -86,10 +153,13 @@ public class main {
                     bib.mostrarLibros();
                     break;
                 case 2:
-                    biblioteca.mostrarPersonas(bib);
+                    bib.mostrarPersonas();
                     break;
                 case 3:
-                    biblioteca.mostrarUsuarios(bib);
+                    bib.mostrarBibliotecario();
+                    break;
+                case 4:
+                    bib.mostrarUsuarios();
                     break;
                 case 0:
                     seguir = false;
@@ -101,72 +171,4 @@ public class main {
         seguir = true;
     }
     
-    public static void opcionesUsuario() {
-        while (seguir) {
-            System.out.println("1.- Añadir Usuario");
-            System.out.println("2.- Reservar Libro");
-            System.out.println("3.- Devolver Libro");
-            System.out.println("4.- Mostrar Reservas");
-            System.out.println("0.- Volver");
-            in = ent.nextInt();
-            switch (in) {
-                case 1:
-                    Usuario.anadirUsuario(bib.getListaUsuarios());
-                    break;
-                case 2:
-                    biblioteca.reservarLibro(bib);
-                    break;
-                case 3:
-                    biblioteca.devolverLibro(bib);
-                    break;
-                case 4:
-                    bib.mostrarReservas();
-                    break;
-                case 0:
-                    seguir = false;
-                    break;
-                default:
-                    System.out.println("Opción no válida");
-            }
-        }
-        seguir = true;
-    }
-    
-    public static void main(String[] args) {
-        libro = new Libro(1234, "El Libro", "Librero", "Libreria", 15, 5);
-        persona = new Persona("Persona", "De", "Incognito", 1234, "contraseña000");
-        usuario = new Usuario("Usuario", "De", "Incognito", 1234, "contraseña111");
-        bib.getListaLibros().add(libro);
-        bib.getListaPersonas().add(persona);
-        bib.getListaUsuarios().add(usuario);
-        while (seguir) {
-            System.out.println("1.- Opciones Libros");
-            System.out.println("2.- Opciones Persona");
-            System.out.println("3.- Opciones Biblioteca");
-            System.out.println("4.- Opciones Usuario");
-            System.out.println("0.- Salir");
-            in = ent.nextInt();
-            switch (in) {
-                case 1:
-                    opcionesLibro();
-                    break;
-                case 2:
-                    opcionesPersona();
-                    break;
-                case 3:
-                    opcionesBiblioteca();
-                    break;
-                case 4:
-                    opcionesUsuario();
-                    break;
-                case 0:
-                    seguir = false;
-                    System.out.println("Adios");
-                    break;
-                default:
-                    System.out.println("Opción no válida");
-                      
-            }
-        }
-    }
 }
